@@ -1,0 +1,6 @@
+k8s:
+  nodes:
+    - name: minikube
+      ip: 172.17.199.167
+      user: docker
+      pass: tcuser
