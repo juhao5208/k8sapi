@@ -8,6 +8,4 @@ k8s可视化管理创建
 
 配置文件为config
 
-该项目使用的是minikube搭建的本地集群进行演示
-
-来自沈逸老师的课程：https://www.jtthink.com/course/play/3218
+项目使用的是 minikube 搭建的本地集群进行演示，可以按照自己的环境更改config
