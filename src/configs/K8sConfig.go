@@ -55,6 +55,7 @@ func (*K8sConfig) InitSysConfig() *models.SysConfig {
 	}
 	return config
 }
+
 func (*K8sConfig) K8sRestConfig() *rest.Config {
 	config, err := clientcmd.BuildConfigFromFlags("", "config")
 	//config.Insecure = true

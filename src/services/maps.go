@@ -19,6 +19,7 @@ import (
  */
 
 type MapItems []*MapItem
+
 type MapItem struct {
 	key   string
 	value interface{}
@@ -37,12 +38,15 @@ func convertToMapItems(m sync.Map) MapItems {
 	})
 	return items
 }
+
 func (this MapItems) Len() int {
 	return len(this)
 }
+
 func (this MapItems) Less(i, j int) bool {
 	return this[i].key < this[j].key
 }
+
 func (this MapItems) Swap(i, j int) {
 	this[i], this[j] = this[j], this[i]
 }
@@ -54,7 +58,6 @@ type DeploymentMap struct {
 
 //添加
 func (this *DeploymentMap) Add(dep *v1.Deployment) {
-
 	if list, ok := this.data.Load(dep.Namespace); ok {
 		list = append(list.([]*v1.Deployment), dep)
 		this.data.Store(dep.Namespace, list)
@@ -112,10 +115,12 @@ type CoreV1Pods []*corev1.Pod
 func (this CoreV1Pods) Len() int {
 	return len(this)
 }
+
 func (this CoreV1Pods) Less(i, j int) bool {
 	//根据时间排序    正排序
 	return this[i].CreationTimestamp.Time.Before(this[j].CreationTimestamp.Time)
 }
+
 func (this CoreV1Pods) Swap(i, j int) {
 	this[i], this[j] = this[j], this[i]
 }
@@ -138,6 +143,7 @@ func (this *PodMapStruct) GetNum(nodeName string) (num int) {
 	})
 	return
 }
+
 func (this *PodMapStruct) ListByNs(ns string) []*corev1.Pod {
 	if list, ok := this.data.Load(ns); ok {
 		ret := list.([]*corev1.Pod)
@@ -157,6 +163,7 @@ func (this *PodMapStruct) Get(ns string, podName string) *corev1.Pod {
 	}
 	return nil
 }
+
 func (this *PodMapStruct) Add(pod *corev1.Pod) {
 	if list, ok := this.data.Load(pod.Namespace); ok {
 		list = append(list.([]*corev1.Pod), pod)
@@ -165,6 +172,7 @@ func (this *PodMapStruct) Add(pod *corev1.Pod) {
 		this.data.Store(pod.Namespace, []*corev1.Pod{pod})
 	}
 }
+
 func (this *PodMapStruct) Update(pod *corev1.Pod) error {
 	if list, ok := this.data.Load(pod.Namespace); ok {
 		for i, range_pod := range list.([]*corev1.Pod) {
@@ -176,6 +184,7 @@ func (this *PodMapStruct) Update(pod *corev1.Pod) error {
 	}
 	return fmt.Errorf("Pod-%s not found", pod.Name)
 }
+
 func (this *PodMapStruct) Delete(pod *corev1.Pod) {
 	if list, ok := this.data.Load(pod.Namespace); ok {
 		for i, range_pod := range list.([]*corev1.Pod) {
@@ -203,6 +212,7 @@ func (this *PodMapStruct) ListByLabels(ns string, labels []map[string]string) ([
 	}
 	return nil, fmt.Errorf("pods not found ")
 }
+
 func (this *PodMapStruct) DEBUG_ListByNS(ns string) []*corev1.Pod {
 	ret := make([]*corev1.Pod, 0)
 	if list, ok := this.data.Load(ns); ok {
@@ -225,30 +235,27 @@ func (this *NsMapStruct) Get(ns string) *corev1.Namespace {
 	}
 	return nil
 }
+
 func (this *NsMapStruct) Add(ns *corev1.Namespace) {
 	this.data.Store(ns.Name, ns)
 }
+
 func (this *NsMapStruct) Update(ns *corev1.Namespace) {
 	this.data.Store(ns.Name, ns)
 }
+
 func (this *NsMapStruct) Delete(ns *corev1.Namespace) {
 	this.data.Delete(ns.Name)
 }
 
 //显示所有的 namespace
 func (this *NsMapStruct) ListAll() []*models.NsModel {
-
-	//this.data.Range(func(key, value interface{}) bool {
-	//ret=append(ret,&models.NsModel{Name:key.(string)})
-	//	return true
-	//})
 	items := convertToMapItems(this.data)
 	sort.Sort(items)
 	ret := make([]*models.NsModel, len(items))
 	for index, item := range items {
 		ret[index] = &models.NsModel{Name: item.key}
 	}
-
 	return ret
 }
 
@@ -256,7 +263,6 @@ func (this *NsMapStruct) ListAll() []*models.NsModel {
 // EventSet 集合 用来保存事件, 只保存最新的一条
 type EventMapStruct struct {
 	data sync.Map // [key string] *v1.Event
-	// key=>namespace+"_"+kind+"_"+name 这里的name 不一定是pod ,这样确保唯一
 }
 
 func (this *EventMapStruct) GetMessage(ns string, kind string, name string) string {
@@ -272,10 +278,12 @@ type V1Beta1Ingress []*v1beta1.Ingress
 func (this V1Beta1Ingress) Len() int {
 	return len(this)
 }
+
 func (this V1Beta1Ingress) Less(i, j int) bool {
 	//根据时间排序    倒排序
 	return this[i].CreationTimestamp.Time.After(this[j].CreationTimestamp.Time)
 }
+
 func (this V1Beta1Ingress) Swap(i, j int) {
 	this[i], this[j] = this[j], this[i]
 }
@@ -295,6 +303,7 @@ func (this *IngressMapStruct) Get(ns string, name string) *v1beta1.Ingress {
 	}
 	return nil
 }
+
 func (this *IngressMapStruct) Add(ingress *v1beta1.Ingress) {
 	if list, ok := this.data.Load(ingress.Namespace); ok {
 		list = append(list.([]*v1beta1.Ingress), ingress)
@@ -303,6 +312,7 @@ func (this *IngressMapStruct) Add(ingress *v1beta1.Ingress) {
 		this.data.Store(ingress.Namespace, []*v1beta1.Ingress{ingress})
 	}
 }
+
 func (this *IngressMapStruct) Update(ingress *v1beta1.Ingress) error {
 	if list, ok := this.data.Load(ingress.Namespace); ok {
 		for i, range_pod := range list.([]*v1beta1.Ingress) {
@@ -314,6 +324,7 @@ func (this *IngressMapStruct) Update(ingress *v1beta1.Ingress) error {
 	}
 	return fmt.Errorf("ingress-%s not found", ingress.Name)
 }
+
 func (this *IngressMapStruct) Delete(ingress *v1beta1.Ingress) {
 	if list, ok := this.data.Load(ingress.Namespace); ok {
 		for i, range_ingress := range list.([]*v1beta1.Ingress) {
@@ -325,6 +336,7 @@ func (this *IngressMapStruct) Delete(ingress *v1beta1.Ingress) {
 		}
 	}
 }
+
 func (this *IngressMapStruct) ListAll(ns string) []*v1beta1.Ingress {
 	if list, ok := this.data.Load(ns); ok {
 		newList := list.([]*v1beta1.Ingress)
@@ -335,9 +347,6 @@ func (this *IngressMapStruct) ListAll(ns string) []*v1beta1.Ingress {
 	return []*v1beta1.Ingress{} //返回空列表
 }
 
-/**
-Service
-*/
 type ServiceMapStruct struct {
 	data sync.Map // [ns string] []*v1.Service
 }
@@ -347,10 +356,12 @@ type CoreV1Service []*corev1.Service
 func (this CoreV1Service) Len() int {
 	return len(this)
 }
+
 func (this CoreV1Service) Less(i, j int) bool {
 	//根据时间排序,倒排序
 	return this[i].CreationTimestamp.Time.After(this[j].CreationTimestamp.Time)
 }
+
 func (this CoreV1Service) Swap(i, j int) {
 	this[i], this[j] = this[j], this[i]
 }
@@ -366,6 +377,7 @@ func (this *ServiceMapStruct) Get(ns string, name string) *corev1.Service {
 	}
 	return nil
 }
+
 func (this *ServiceMapStruct) Add(svc *corev1.Service) {
 	if list, ok := this.data.Load(svc.Namespace); ok {
 		list = append(list.([]*corev1.Service), svc)
@@ -374,6 +386,7 @@ func (this *ServiceMapStruct) Add(svc *corev1.Service) {
 		this.data.Store(svc.Namespace, []*corev1.Service{svc})
 	}
 }
+
 func (this *ServiceMapStruct) Update(svc *corev1.Service) error {
 	if list, ok := this.data.Load(svc.Namespace); ok {
 		for i, range_pod := range list.([]*corev1.Service) {
@@ -385,6 +398,7 @@ func (this *ServiceMapStruct) Update(svc *corev1.Service) error {
 	}
 	return fmt.Errorf("service-%s not found", svc.Name)
 }
+
 func (this *ServiceMapStruct) Delete(svc *corev1.Service) {
 	if list, ok := this.data.Load(svc.Namespace); ok {
 		for i, range_svc := range list.([]*corev1.Service) {
@@ -396,6 +410,7 @@ func (this *ServiceMapStruct) Delete(svc *corev1.Service) {
 		}
 	}
 }
+
 func (this *ServiceMapStruct) ListAll(ns string) []*models.ServiceModel {
 	if list, ok := this.data.Load(ns); ok {
 		newList := list.([]*corev1.Service)
@@ -413,18 +428,17 @@ func (this *ServiceMapStruct) ListAll(ns string) []*models.ServiceModel {
 	return []*models.ServiceModel{} //返回空列表
 }
 
-/**
-Secret
-*/
 type CoreV1Secret []*corev1.Secret
 
 func (this CoreV1Secret) Len() int {
 	return len(this)
 }
+
 func (this CoreV1Secret) Less(i, j int) bool {
 	//根据时间排序    倒排序
 	return this[i].CreationTimestamp.Time.After(this[j].CreationTimestamp.Time)
 }
+
 func (this CoreV1Secret) Swap(i, j int) {
 	this[i], this[j] = this[j], this[i]
 }
@@ -444,6 +458,7 @@ func (this *SecretMapStruct) Get(ns string, name string) *corev1.Secret {
 	}
 	return nil
 }
+
 func (this *SecretMapStruct) Add(item *corev1.Secret) {
 	if list, ok := this.data.Load(item.Namespace); ok {
 		list = append(list.([]*corev1.Secret), item)
@@ -452,6 +467,7 @@ func (this *SecretMapStruct) Add(item *corev1.Secret) {
 		this.data.Store(item.Namespace, []*corev1.Secret{item})
 	}
 }
+
 func (this *SecretMapStruct) Update(item *corev1.Secret) error {
 	if list, ok := this.data.Load(item.Namespace); ok {
 		for i, range_item := range list.([]*corev1.Secret) {
@@ -463,6 +479,7 @@ func (this *SecretMapStruct) Update(item *corev1.Secret) error {
 	}
 	return fmt.Errorf("Secret-%s not found", item.Name)
 }
+
 func (this *SecretMapStruct) Delete(svc *corev1.Secret) {
 	if list, ok := this.data.Load(svc.Namespace); ok {
 		for i, range_item := range list.([]*corev1.Secret) {
@@ -474,27 +491,28 @@ func (this *SecretMapStruct) Delete(svc *corev1.Secret) {
 		}
 	}
 }
+
 func (this *SecretMapStruct) ListAll(ns string) []*corev1.Secret {
 	if list, ok := this.data.Load(ns); ok {
 		newList := list.([]*corev1.Secret)
 		sort.Sort(CoreV1Secret(newList)) //  按时间倒排序
-
 		return newList
 	}
 	return []*corev1.Secret{} //返回空列表
 }
 
 //ConfigMapMap
-
 type CoreV1ConfigMap []*cm
 
 func (this CoreV1ConfigMap) Len() int {
 	return len(this)
 }
+
 func (this CoreV1ConfigMap) Less(i, j int) bool {
 	//根据时间排序    倒排序
 	return this[i].cmdata.CreationTimestamp.Time.After(this[j].cmdata.CreationTimestamp.Time)
 }
+
 func (this CoreV1ConfigMap) Swap(i, j int) {
 	this[i], this[j] = this[j], this[i]
 }
@@ -526,6 +544,7 @@ func (this *ConfigMapStruct) Get(ns string, name string) *corev1.ConfigMap {
 	}
 	return nil
 }
+
 func (this *ConfigMapStruct) Add(item *corev1.ConfigMap) {
 	if list, ok := this.data.Load(item.Namespace); ok {
 		list = append(list.([]*cm), newcm(item))
@@ -548,6 +567,7 @@ func (this *ConfigMapStruct) Update(item *corev1.ConfigMap) bool {
 	}
 	return false
 }
+
 func (this *ConfigMapStruct) Delete(svc *corev1.ConfigMap) {
 	if list, ok := this.data.Load(svc.Namespace); ok {
 		for i, range_item := range list.([]*cm) {
@@ -559,6 +579,7 @@ func (this *ConfigMapStruct) Delete(svc *corev1.ConfigMap) {
 		}
 	}
 }
+
 func (this *ConfigMapStruct) ListAll(ns string) []*corev1.ConfigMap {
 	ret := []*corev1.ConfigMap{}
 	if list, ok := this.data.Load(ns); ok {
@@ -582,6 +603,7 @@ func (this *NodeMapStruct) Get(name string) *corev1.Node {
 	}
 	return nil
 }
+
 func (this *NodeMapStruct) Add(item *corev1.Node) {
 	//直接覆盖
 	this.data.Store(item.Name, item)
@@ -591,9 +613,11 @@ func (this *NodeMapStruct) Update(item *corev1.Node) bool {
 	this.data.Store(item.Name, item)
 	return true
 }
+
 func (this *NodeMapStruct) Delete(node *corev1.Node) {
 	this.data.Delete(node.Name)
 }
+
 func (this *NodeMapStruct) ListAll() []*corev1.Node {
 	ret := []*corev1.Node{}
 	this.data.Range(func(key, value interface{}) bool {
@@ -607,27 +631,6 @@ func (this *NodeMapStruct) ListAll() []*corev1.Node {
 type UserMap struct {
 	data sync.Map // [nodename string] *v1.Node   注意里面不是切片
 }
-
-//获取所有用户信息
-/*func (this *UserMap) GetUserList() []models.Users {
-	user := []models.Users{}
-	rows, err := database.NewPool().Query("select * from user")
-	if err != nil {
-		panic(err)
-	}
-	for rows.Next() {
-		//var id, uuid, username, password, usertype, usertel, useradd string
-		var i int = 0
-		err = rows.Scan(&user[i].UserId, &user[i].UUID, &user[i].Username, &user[i].Password, &user[i].UserType,
-			&user[i].UserTel, &user[i].UserAdd)
-		if err != nil {
-			panic(err)
-		}
-		//fmt.Println(id, uuid, username, password, usertype, usertel, useradd)
-		i++
-	}
-	return user
-}*/
 
 //User
 type ImageMap struct {

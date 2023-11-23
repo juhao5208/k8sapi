@@ -24,6 +24,7 @@ type NodeCtl struct {
 func NewNodeCtl() *NodeCtl {
 	return &NodeCtl{}
 }
+
 func (this *NodeCtl) ListAll(c *gin.Context) goft.Json {
 	return gin.H{
 		"code": 20000,
@@ -48,6 +49,7 @@ func (this *NodeCtl) SaveNode(c *gin.Context) goft.Json {
 		"data": "success",
 	}
 }
+
 func (this *NodeCtl) LoadDetail(c *gin.Context) goft.Json {
 	nodeName := c.Param("node")
 	return gin.H{

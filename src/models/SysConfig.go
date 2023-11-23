@@ -17,10 +17,12 @@ type NodesConfig struct {
 	User string
 	Pass string
 }
+
 type K8sConfig struct {
 	Nodes       []*NodesConfig
 	ClusterInfo *ClusterInfo `yaml:"cluster-info"`
 }
+
 type SysConfig struct {
 	K8s *K8sConfig
 }

@@ -31,10 +31,10 @@ func (this *WsCtl) Connect(c *gin.Context) (v goft.Void) {
 		return
 	} else {
 		wscore.ClientMap.Store(client)
-
 		return
 	}
 }
+
 func (this *WsCtl) PodConnect(c *gin.Context) (v goft.Void) {
 	ns := c.Query("ns")
 	pod := c.Query("pod")
@@ -79,6 +79,7 @@ func (this *WsCtl) Build(goft *goft.Goft) {
 	goft.Handle("GET", "/podws", this.PodConnect)
 	goft.Handle("GET", "/nodews", this.NodeConnect)
 }
+
 func (this *WsCtl) Name() string {
 	return "WsCtl"
 }

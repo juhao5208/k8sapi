@@ -30,6 +30,7 @@ func (this *RoleHander) OnAdd(obj interface{}) {
 		},
 	)
 }
+
 func (this *RoleHander) OnUpdate(oldObj, newObj interface{}) {
 	err := this.RoleMap.Update(newObj.(*v1.Role))
 	if err != nil {
@@ -45,6 +46,7 @@ func (this *RoleHander) OnUpdate(oldObj, newObj interface{}) {
 		},
 	)
 }
+
 func (this *RoleHander) OnDelete(obj interface{}) {
 	this.RoleMap.Delete(obj.(*v1.Role))
 	ns := obj.(*v1.Role).Namespace
@@ -73,6 +75,7 @@ func (this *RoleBindingHander) OnAdd(obj interface{}) {
 		},
 	)
 }
+
 func (this *RoleBindingHander) OnUpdate(oldObj, newObj interface{}) {
 	err := this.RoleBindingMap.Update(newObj.(*v1.RoleBinding))
 	if err != nil {
@@ -88,6 +91,7 @@ func (this *RoleBindingHander) OnUpdate(oldObj, newObj interface{}) {
 		},
 	)
 }
+
 func (this *RoleBindingHander) OnDelete(obj interface{}) {
 	this.RoleBindingMap.Delete(obj.(*v1.RoleBinding))
 	ns := obj.(*v1.RoleBinding).Namespace
@@ -115,6 +119,7 @@ func (this *ClusterRoleBindingHander) OnAdd(obj interface{}) {
 		},
 	)
 }
+
 func (this *ClusterRoleBindingHander) OnUpdate(oldObj, newObj interface{}) {
 	err := this.ClusterRoleBindingMap.Update(newObj.(*v1.ClusterRoleBinding))
 	if err != nil {
@@ -129,6 +134,7 @@ func (this *ClusterRoleBindingHander) OnUpdate(oldObj, newObj interface{}) {
 		},
 	)
 }
+
 func (this *ClusterRoleBindingHander) OnDelete(obj interface{}) {
 	this.ClusterRoleBindingMap.Delete(obj.(*v1.ClusterRoleBinding))
 	wscore.ClientMap.SendAll(
@@ -156,6 +162,7 @@ func (this *SaHander) OnAdd(obj interface{}) {
 		},
 	)
 }
+
 func (this *SaHander) OnUpdate(oldObj, newObj interface{}) {
 	err := this.SaMap.Update(newObj.(*corev1.ServiceAccount))
 	if err != nil {
@@ -170,6 +177,7 @@ func (this *SaHander) OnUpdate(oldObj, newObj interface{}) {
 		},
 	)
 }
+
 func (this *SaHander) OnDelete(obj interface{}) {
 	this.SaMap.Delete(obj.(*corev1.ServiceAccount))
 	ns := obj.(*corev1.ServiceAccount).Namespace
@@ -197,6 +205,7 @@ func (this *ClusterRoleHandler) OnAdd(obj interface{}) {
 		},
 	)
 }
+
 func (this *ClusterRoleHandler) OnUpdate(oldObj, newObj interface{}) {
 	err := this.ClusterRoleMap.Update(newObj.(*v1.ClusterRole))
 	if err != nil {
@@ -210,6 +219,7 @@ func (this *ClusterRoleHandler) OnUpdate(oldObj, newObj interface{}) {
 		},
 	)
 }
+
 func (this *ClusterRoleHandler) OnDelete(obj interface{}) {
 	this.ClusterRoleMap.Delete(obj.(*v1.ClusterRole))
 	wscore.ClientMap.SendAll(

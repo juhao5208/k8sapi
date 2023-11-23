@@ -26,9 +26,11 @@ func (this *NsCtl) ListAll(c *gin.Context) goft.Json {
 		"data": this.NsMap.ListAll(),
 	}
 }
+
 func (this *NsCtl) Build(goft *goft.Goft) {
 	goft.Handle("GET", "/nslist", this.ListAll)
 }
+
 func (*NsCtl) Name() string {
 	return "NsCtl"
 }

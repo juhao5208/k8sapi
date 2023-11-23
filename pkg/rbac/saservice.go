@@ -16,8 +16,7 @@ type SaService struct {
 func NewSaService() *SaService {
 	return &SaService{}
 }
-func (this *SaService) ListSa(ns string) []*corev1.ServiceAccount {
-	//sa:=corev1.ServiceAccount{}
 
+func (this *SaService) ListSa(ns string) []*corev1.ServiceAccount {
 	return this.SaMap.ListAll(ns)
 }

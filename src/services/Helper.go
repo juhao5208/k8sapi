@@ -67,10 +67,6 @@ func (*Helper) PageResource(current, size int, list []interface{}) *ItemsPage {
 	if current*size > pageInfo.Total {
 		newSet = append(newSet, list[(current-1)*size:]...)
 	} else {
-		//fmt.Println((current-1)*size,":",size)
-		//  1 ,2,3,4,5,6
-		// [) 左闭右开
-		// 0,2   list[0:2]
 		newSet = append(newSet, list[(current-1)*size:(current-1)*size+size]...)
 	}
 	//重新整理赋值

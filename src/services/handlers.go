@@ -32,6 +32,7 @@ func (this *DepHandler) OnAdd(obj interface{}) {
 		},
 	)
 }
+
 func (this *DepHandler) OnUpdate(oldObj, newObj interface{}) {
 	err := this.DepMap.Update(newObj.(*v1.Deployment))
 	if err != nil {
@@ -46,6 +47,7 @@ func (this *DepHandler) OnUpdate(oldObj, newObj interface{}) {
 		)
 	}
 }
+
 func (this *DepHandler) OnDelete(obj interface{}) {
 	if d, ok := obj.(*v1.Deployment); ok {
 		this.DepMap.Delete(d)
@@ -75,8 +77,8 @@ func (this *PodHandler) OnAdd(obj interface{}) {
 				"data": this.PodService.PagePods(ns, 1, 5)},
 		},
 	)
-
 }
+
 func (this *PodHandler) OnUpdate(oldObj, newObj interface{}) {
 	err := this.PodMap.Update(newObj.(*corev1.Pod))
 	if err != nil {
@@ -92,6 +94,7 @@ func (this *PodHandler) OnUpdate(oldObj, newObj interface{}) {
 		)
 	}
 }
+
 func (this *PodHandler) OnDelete(obj interface{}) {
 	if d, ok := obj.(*corev1.Pod); ok {
 		this.PodMap.Delete(d)
@@ -114,10 +117,11 @@ type NsHandler struct {
 func (this *NsHandler) OnAdd(obj interface{}) {
 	this.NsMap.Add(obj.(*corev1.Namespace))
 }
+
 func (this *NsHandler) OnUpdate(oldObj, newObj interface{}) {
 	this.NsMap.Update(newObj.(*corev1.Namespace))
-
 }
+
 func (this *NsHandler) OnDelete(obj interface{}) {
 	if d, ok := obj.(*corev1.Namespace); ok {
 		this.NsMap.Delete(d)
@@ -139,12 +143,15 @@ func (this *EventHandler) storeData(obj interface{}, isdelete bool) {
 		}
 	}
 }
+
 func (this *EventHandler) OnAdd(obj interface{}) {
 	this.storeData(obj, false)
 }
+
 func (this *EventHandler) OnUpdate(oldObj, newObj interface{}) {
 	this.storeData(newObj, false)
 }
+
 func (this *EventHandler) OnDelete(obj interface{}) {
 	this.storeData(obj, true)
 }
@@ -166,6 +173,7 @@ func (this *IngressHandler) OnAdd(obj interface{}) {
 		},
 	)
 }
+
 func (this *IngressHandler) OnUpdate(oldObj, newObj interface{}) {
 	err := this.IngressMap.Update(newObj.(*v1beta1.Ingress))
 	if err != nil {
@@ -180,8 +188,8 @@ func (this *IngressHandler) OnUpdate(oldObj, newObj interface{}) {
 				"data": this.IngressService.ListIngress(ns)},
 		},
 	)
-
 }
+
 func (this *IngressHandler) OnDelete(obj interface{}) {
 	this.IngressMap.Delete(obj.(*v1beta1.Ingress))
 	ns := obj.(*v1beta1.Ingress).Namespace
@@ -210,6 +218,7 @@ func (this *ServiceHandler) OnAdd(obj interface{}) {
 		},
 	)
 }
+
 func (this *ServiceHandler) OnUpdate(oldObj, newObj interface{}) {
 	err := this.SvcMap.Update(newObj.(*corev1.Service))
 	if err != nil {
@@ -225,6 +234,7 @@ func (this *ServiceHandler) OnUpdate(oldObj, newObj interface{}) {
 		},
 	)
 }
+
 func (this *ServiceHandler) OnDelete(obj interface{}) {
 	this.SvcMap.Delete(obj.(*corev1.Service))
 	ns := obj.(*corev1.Service).Namespace
@@ -254,6 +264,7 @@ func (this *SecretHandler) OnAdd(obj interface{}) {
 		},
 	)
 }
+
 func (this *SecretHandler) OnUpdate(oldObj, newObj interface{}) {
 	err := this.SecretMap.Update(newObj.(*corev1.Secret))
 	if err != nil {
@@ -269,6 +280,7 @@ func (this *SecretHandler) OnUpdate(oldObj, newObj interface{}) {
 		},
 	)
 }
+
 func (this *SecretHandler) OnDelete(obj interface{}) {
 	this.SecretMap.Delete(obj.(*corev1.Secret))
 	ns := obj.(*corev1.Secret).Namespace
@@ -298,6 +310,7 @@ func (this *ConfigMapHandler) OnAdd(obj interface{}) {
 		},
 	)
 }
+
 func (this *ConfigMapHandler) OnUpdate(oldObj, newObj interface{}) {
 	//重点： 只要update返回true 才会发送 。否则不发送
 	if this.ConfigMap.Update(newObj.(*corev1.ConfigMap)) {
@@ -311,6 +324,7 @@ func (this *ConfigMapHandler) OnUpdate(oldObj, newObj interface{}) {
 		)
 	}
 }
+
 func (this *ConfigMapHandler) OnDelete(obj interface{}) {
 	this.ConfigMap.Delete(obj.(*corev1.ConfigMap))
 	ns := obj.(*corev1.ConfigMap).Namespace
@@ -331,7 +345,6 @@ type NodeMapHandler struct {
 
 func (this *NodeMapHandler) OnAdd(obj interface{}) {
 	this.NodeMap.Add(obj.(*corev1.Node))
-
 	wscore.ClientMap.SendAll(
 		gin.H{
 			"type": "node",
@@ -340,6 +353,7 @@ func (this *NodeMapHandler) OnAdd(obj interface{}) {
 		},
 	)
 }
+
 func (this *NodeMapHandler) OnUpdate(oldObj, newObj interface{}) {
 	//重点： 只要update返回true 才会发送 。否则不发送
 	if this.NodeMap.Update(newObj.(*corev1.Node)) {
@@ -352,9 +366,9 @@ func (this *NodeMapHandler) OnUpdate(oldObj, newObj interface{}) {
 		)
 	}
 }
+
 func (this *NodeMapHandler) OnDelete(obj interface{}) {
 	this.NodeMap.Delete(obj.(*corev1.Node))
-
 	wscore.ClientMap.SendAll(
 		gin.H{
 			"type": "node",

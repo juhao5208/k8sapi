@@ -19,10 +19,12 @@ type V1Role []*v1.Role
 func (this V1Role) Len() int {
 	return len(this)
 }
+
 func (this V1Role) Less(i, j int) bool {
 	//根据时间排序    倒排序
 	return this[i].CreationTimestamp.Time.After(this[j].CreationTimestamp.Time)
 }
+
 func (this V1Role) Swap(i, j int) {
 	this[i], this[j] = this[j], this[i]
 }
@@ -41,6 +43,7 @@ func (this *RoleMapStruct) Get(ns string, name string) *v1.Role {
 	}
 	return nil
 }
+
 func (this *RoleMapStruct) Add(item *v1.Role) {
 	if list, ok := this.data.Load(item.Namespace); ok {
 		list = append(list.([]*v1.Role), item)
@@ -49,6 +52,7 @@ func (this *RoleMapStruct) Add(item *v1.Role) {
 		this.data.Store(item.Namespace, []*v1.Role{item})
 	}
 }
+
 func (this *RoleMapStruct) Update(item *v1.Role) error {
 	if list, ok := this.data.Load(item.Namespace); ok {
 		for i, range_item := range list.([]*v1.Role) {
@@ -60,6 +64,7 @@ func (this *RoleMapStruct) Update(item *v1.Role) error {
 	}
 	return fmt.Errorf("Role-%s not found", item.Name)
 }
+
 func (this *RoleMapStruct) Delete(svc *v1.Role) {
 	if list, ok := this.data.Load(svc.Namespace); ok {
 		for i, range_item := range list.([]*v1.Role) {
@@ -71,6 +76,7 @@ func (this *RoleMapStruct) Delete(svc *v1.Role) {
 		}
 	}
 }
+
 func (this *RoleMapStruct) ListAll(ns string) []*v1.Role {
 	if list, ok := this.data.Load(ns); ok {
 		newList := list.([]*v1.Role)
@@ -107,6 +113,7 @@ func (this *RoleBindingMapStruct) Get(ns string, name string) *v1.RoleBinding {
 	}
 	return nil
 }
+
 func (this *RoleBindingMapStruct) Add(item *v1.RoleBinding) {
 	if list, ok := this.data.Load(item.Namespace); ok {
 		list = append(list.([]*v1.RoleBinding), item)
@@ -115,6 +122,7 @@ func (this *RoleBindingMapStruct) Add(item *v1.RoleBinding) {
 		this.data.Store(item.Namespace, []*v1.RoleBinding{item})
 	}
 }
+
 func (this *RoleBindingMapStruct) Update(item *v1.RoleBinding) error {
 	if list, ok := this.data.Load(item.Namespace); ok {
 		for i, range_item := range list.([]*v1.RoleBinding) {
@@ -126,6 +134,7 @@ func (this *RoleBindingMapStruct) Update(item *v1.RoleBinding) error {
 	}
 	return fmt.Errorf("Role-%s not found", item.Name)
 }
+
 func (this *RoleBindingMapStruct) Delete(svc *v1.RoleBinding) {
 	if list, ok := this.data.Load(svc.Namespace); ok {
 		for i, range_item := range list.([]*v1.RoleBinding) {
@@ -137,6 +146,7 @@ func (this *RoleBindingMapStruct) Delete(svc *v1.RoleBinding) {
 		}
 	}
 }
+
 func (this *RoleBindingMapStruct) ListAll(ns string) []*v1.RoleBinding {
 	if list, ok := this.data.Load(ns); ok {
 		newList := list.([]*v1.RoleBinding)
@@ -151,10 +161,12 @@ type V1ClusterRoleBinding []*v1.ClusterRoleBinding
 func (this V1ClusterRoleBinding) Len() int {
 	return len(this)
 }
+
 func (this V1ClusterRoleBinding) Less(i, j int) bool {
 	//根据时间排序    倒排序
 	return this[i].CreationTimestamp.Time.After(this[j].CreationTimestamp.Time)
 }
+
 func (this V1ClusterRoleBinding) Swap(i, j int) {
 	this[i], this[j] = this[j], this[i]
 }
@@ -168,20 +180,21 @@ func (this *ClusterRoleBindingMapStruct) Get(name string) *v1.ClusterRoleBinding
 		return v.(*v1.ClusterRoleBinding)
 	}
 	return nil
-
 }
+
 func (this *ClusterRoleBindingMapStruct) Add(item *v1.ClusterRoleBinding) {
-
 	this.data.Store(item.Name, item)
-
 }
+
 func (this *ClusterRoleBindingMapStruct) Update(item *v1.ClusterRoleBinding) error {
 	this.data.Store(item.Name, item)
 	return nil
 }
+
 func (this *ClusterRoleBindingMapStruct) Delete(svc *v1.ClusterRoleBinding) {
 	this.data.Delete(svc.Name)
 }
+
 func (this *ClusterRoleBindingMapStruct) ListAll() []*v1.ClusterRoleBinding {
 	list := []*v1.ClusterRoleBinding{}
 	this.data.Range(func(key, value interface{}) bool {
@@ -197,10 +210,12 @@ type CoreV1Sa []*corev1.ServiceAccount
 func (this CoreV1Sa) Len() int {
 	return len(this)
 }
+
 func (this CoreV1Sa) Less(i, j int) bool {
 	//根据时间排序    倒排序
 	return this[i].CreationTimestamp.Time.After(this[j].CreationTimestamp.Time)
 }
+
 func (this CoreV1Sa) Swap(i, j int) {
 	this[i], this[j] = this[j], this[i]
 }
@@ -219,6 +234,7 @@ func (this *SaMapStruct) Get(ns string, name string) *corev1.ServiceAccount {
 	}
 	return nil
 }
+
 func (this *SaMapStruct) Add(item *corev1.ServiceAccount) {
 	if list, ok := this.data.Load(item.Namespace); ok {
 		list = append(list.([]*corev1.ServiceAccount), item)
@@ -227,6 +243,7 @@ func (this *SaMapStruct) Add(item *corev1.ServiceAccount) {
 		this.data.Store(item.Namespace, []*corev1.ServiceAccount{item})
 	}
 }
+
 func (this *SaMapStruct) Update(item *corev1.ServiceAccount) error {
 	if list, ok := this.data.Load(item.Namespace); ok {
 		for i, range_item := range list.([]*corev1.ServiceAccount) {
@@ -238,6 +255,7 @@ func (this *SaMapStruct) Update(item *corev1.ServiceAccount) error {
 	}
 	return fmt.Errorf("ServiceAccount-%s not found", item.Name)
 }
+
 func (this *SaMapStruct) Delete(sa *corev1.ServiceAccount) {
 	if list, ok := this.data.Load(sa.Namespace); ok {
 		for i, range_item := range list.([]*corev1.ServiceAccount) {
@@ -249,6 +267,7 @@ func (this *SaMapStruct) Delete(sa *corev1.ServiceAccount) {
 		}
 	}
 }
+
 func (this *SaMapStruct) ListAll(ns string) []*corev1.ServiceAccount {
 	if list, ok := this.data.Load(ns); ok {
 		newList := list.([]*corev1.ServiceAccount)
@@ -285,10 +304,12 @@ func (this *ClusterRoleMapStruct) Get(name string) *v1.ClusterRole {
 func (this *ClusterRoleMapStruct) Add(item *v1.ClusterRole) {
 	this.data.Store(item.Name, item)
 }
+
 func (this *ClusterRoleMapStruct) Update(item *v1.ClusterRole) error {
 	this.data.Store(item.Name, item)
 	return nil
 }
+
 func (this *ClusterRoleMapStruct) Delete(svc *v1.ClusterRole) {
 	this.data.Delete(svc.Name)
 

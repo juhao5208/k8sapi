@@ -15,18 +15,20 @@ type DeploymentCtl struct {
 func NewDeploymentCtl() *DeploymentCtl {
 	return &DeploymentCtl{}
 }
+
 func (this *DeploymentCtl) GetList(c *gin.Context) goft.Json {
 	ns := c.DefaultQuery("ns", "default") // GET /deployments?ns=xxx
 	return gin.H{
 		"code": 20000,
 		"data": this.DepService.ListAll(ns),
 	}
-
 }
+
 func (this *DeploymentCtl) Build(goft *goft.Goft) {
 	//路由
 	goft.Handle("GET", "/deployments", this.GetList)
 }
+
 func (*DeploymentCtl) Name() string {
 	return "DeploymentCtl"
 }

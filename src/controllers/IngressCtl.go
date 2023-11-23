@@ -25,6 +25,7 @@ type IngressCtl struct {
 func NewIngressCtl() *IngressCtl {
 	return &IngressCtl{}
 }
+
 func (*IngressCtl) Name() string {
 	return "IngressCtl"
 }
@@ -50,6 +51,7 @@ func (this *IngressCtl) RmIngress(c *gin.Context) goft.Json {
 		"data": "OK",
 	}
 }
+
 func (this *IngressCtl) ListAll(c *gin.Context) goft.Json {
 	ns := c.DefaultQuery("ns", "default")
 	return gin.H{
@@ -71,6 +73,7 @@ func (this *IngressCtl) GetIngressForYaml(c *gin.Context) goft.Json {
 		"data": string(b), //暂时 不分页
 	}
 }
+
 func (this *IngressCtl) Build(goft *goft.Goft) {
 	goft.Handle("GET", "/ingress", this.ListAll)
 	goft.Handle("DELETE", "/ingress", this.RmIngress)

@@ -14,6 +14,7 @@ type WsClient struct {
 func NewWsClient(conn *websocket.Conn) *WsClient {
 	return &WsClient{conn: conn, readChan: make(chan *WsMessage), closeChan: make(chan byte)}
 }
+
 func (this *WsClient) Ping(waittime time.Duration) {
 	for {
 		time.Sleep(waittime)
@@ -24,6 +25,7 @@ func (this *WsClient) Ping(waittime time.Duration) {
 		}
 	}
 }
+
 func (this *WsClient) ReadLoop() {
 	for {
 		t, data, err := this.conn.ReadMessage()

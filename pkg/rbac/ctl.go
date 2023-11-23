@@ -34,6 +34,7 @@ type RBACCtl struct {
 func NewRBACCtl() *RBACCtl {
 	return &RBACCtl{}
 }
+
 func (this *RBACCtl) Roles(c *gin.Context) goft.Json {
 	ns := c.DefaultQuery("ns", "default")
 	return gin.H{
@@ -41,6 +42,7 @@ func (this *RBACCtl) Roles(c *gin.Context) goft.Json {
 		"data": this.RoleService.ListRoles(ns),
 	}
 }
+
 func (this *RBACCtl) ClusterRoles(c *gin.Context) goft.Json {
 	return gin.H{
 		"code": 20000,
@@ -67,6 +69,7 @@ func (this *RBACCtl) ClusterRolesDetail(c *gin.Context) goft.Json {
 		"data": this.RoleService.GetClusterRole(rname),
 	}
 }
+
 func (this *RBACCtl) CreateRole(c *gin.Context) goft.Json {
 	role := rbacv1.Role{} //原生的k8s role 对象
 	goft.Error(c.ShouldBindJSON(&role))
@@ -126,6 +129,7 @@ func (this *RBACCtl) UpdateRolesDetail(c *gin.Context) goft.Json {
 		"data": "success",
 	}
 }
+
 func (this *RBACCtl) RoleBindingList(c *gin.Context) goft.Json {
 	ns := c.DefaultQuery("ns", "default")
 	return gin.H{
@@ -133,6 +137,7 @@ func (this *RBACCtl) RoleBindingList(c *gin.Context) goft.Json {
 		"data": this.RoleService.ListRoleBindings(ns),
 	}
 }
+
 func (this *RBACCtl) ClusterRoleBindingList(c *gin.Context) goft.Json {
 
 	return gin.H{
@@ -151,6 +156,7 @@ func (this *RBACCtl) CreateRoleBinding(c *gin.Context) goft.Json {
 		"data": "success",
 	}
 }
+
 func (this *RBACCtl) CreateClusterRoleBinding(c *gin.Context) goft.Json {
 	rb := &rbacv1.ClusterRoleBinding{}
 	goft.Error(c.ShouldBindJSON(rb))
@@ -191,6 +197,7 @@ func (this *RBACCtl) AddUserToRoleBinding(c *gin.Context) goft.Json {
 		"data": "success",
 	}
 }
+
 func (this *RBACCtl) AddUserToClusterRoleBinding(c *gin.Context) goft.Json {
 
 	name := c.DefaultQuery("name", "") //clusterrolebinding 名称
@@ -307,6 +314,7 @@ func (this *RBACCtl) PostUa(c *gin.Context) goft.Json {
 	}
 
 }
+
 func (this *RBACCtl) DeleteUa(c *gin.Context) goft.Json {
 	postModel := &PostUAModel{}
 	goft.Error(c.ShouldBindJSON(postModel))
@@ -315,7 +323,6 @@ func (this *RBACCtl) DeleteUa(c *gin.Context) goft.Json {
 		"code": 20000,
 		"data": "success",
 	}
-
 }
 
 //生成 config文件
@@ -330,11 +337,13 @@ func (this *RBACCtl) Clientconfig(c *gin.Context) goft.Json {
 		Server:                   this.SysConfig.K8s.ClusterInfo.EndPoint,
 		CertificateAuthorityData: helpers.CertData(this.SysConfig.K8s.ClusterInfo.CaFile),
 	}
+
 	contextName := fmt.Sprintf("%s@kubernetes", user)
 	cfg.Contexts[contextName] = &api.Context{
 		AuthInfo: user,
 		Cluster:  clusterName,
 	}
+
 	cfg.CurrentContext = contextName
 	userCertFile := fmt.Sprintf("%s/%s.pem", this.SysConfig.K8s.ClusterInfo.UserCert, user)
 	userCertKeyFile := fmt.Sprintf("%s/%s_key.pem", this.SysConfig.K8s.ClusterInfo.UserCert, user)
@@ -342,6 +351,7 @@ func (this *RBACCtl) Clientconfig(c *gin.Context) goft.Json {
 		ClientKeyData:         helpers.CertData(userCertKeyFile),
 		ClientCertificateData: helpers.CertData(userCertFile),
 	}
+
 	fileContent, err := clientcmd.Write(*cfg)
 	goft.Error(err)
 
@@ -354,10 +364,10 @@ func (this *RBACCtl) Clientconfig(c *gin.Context) goft.Json {
 func (*RBACCtl) Name() string {
 	return "RBACCtl"
 }
+
 func (this *RBACCtl) Build(goft *goft.Goft) {
 	goft.Handle("GET", "/clusterroles", this.ClusterRoles)
 	goft.Handle("DELETE", "/clusterroles", this.DeleteClusterRole)
-
 	goft.Handle("GET", "/roles", this.Roles)
 	goft.Handle("GET", "/clusterroles/:cname", this.ClusterRolesDetail)
 	goft.Handle("GET", "/roles/:ns/:rolename", this.RolesDetail)
@@ -370,18 +380,13 @@ func (this *RBACCtl) Build(goft *goft.Goft) {
 	goft.Handle("POST", "/roles", this.CreateRole)
 	goft.Handle("POST", "/clusterroles", this.CreateClusterRole) //创建集群角色
 	goft.Handle("DELETE", "/roles", this.DeleteRole)
-
 	goft.Handle("GET", "/clusterrolebindings", this.ClusterRoleBindingList)
 	goft.Handle("POST", "/clusterrolebindings", this.CreateClusterRoleBinding)
 	goft.Handle("PUT", "/clusterrolebindings", this.AddUserToClusterRoleBinding)
 	goft.Handle("DELETE", "/clusterrolebindings", this.DeleteClusterRoleBinding)
-
 	goft.Handle("GET", "/sa", this.SaList)
-
 	goft.Handle("GET", "/ua", this.UaList)
 	goft.Handle("POST", "/ua", this.PostUa)
 	goft.Handle("DELETE", "/ua", this.DeleteUa)
-
 	goft.Handle("GET", "/clientconfig", this.Clientconfig)
-
 }

@@ -13,9 +13,11 @@ type CommonService struct {
 func NewCommonService() *CommonService {
 	return &CommonService{}
 }
+
 func (this *CommonService) GetImages(dep v1.Deployment) string {
 	return this.GetImagesByPod(dep.Spec.Template.Spec.Containers)
 }
+
 func (*CommonService) GetImagesByPod(containers []corev1.Container) string {
 	images := containers[0].Image
 	if imgLen := len(containers); imgLen > 1 {
@@ -23,6 +25,7 @@ func (*CommonService) GetImagesByPod(containers []corev1.Container) string {
 	}
 	return images
 }
+
 func (*CommonService) PosIsReady(pod *corev1.Pod) bool {
 	if pod.Status.Phase != "Running" {
 		return false

@@ -12,6 +12,7 @@ type CrosMiddleware struct {
 func NewCrosMiddleware() *CrosMiddleware {
 	return &CrosMiddleware{}
 }
+
 func (*CrosMiddleware) OnRequest(c *gin.Context) error {
 	method := c.Request.Method
 	if method != "" {
@@ -21,14 +22,13 @@ func (*CrosMiddleware) OnRequest(c *gin.Context) error {
 		c.Header("Access-Control-Expose-Headers", "Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Cache-Control, Content-Language, Content-Type")
 		c.Header("Access-Control-Allow-Credentials", "true")
 	}
-
 	if method == "OPTIONS" {
 		c.Set(goft.HTTP_STATUS, http.StatusNoContent) //设置响应 httpcode
 		panic("")
 	}
 	return nil
-
 }
+
 func (*CrosMiddleware) OnResponse(result interface{}) (interface{}, error) {
 	return result, nil
 }

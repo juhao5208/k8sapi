@@ -30,6 +30,7 @@ func GetNodeUsage(c *versioned.Clientset, node *v1.Node) []float64 {
 	memory := float64(nodeMetric.Usage.Memory().MilliValue()) / float64(node.Status.Capacity.Memory().MilliValue())
 	return []float64{cpu, memory}
 }
+
 func FilterTaints(taints []v1.Taint) (ret []string) {
 	for _, taint := range taints {
 		if showLable(taint.Key) {

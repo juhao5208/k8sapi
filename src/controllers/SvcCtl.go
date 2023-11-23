@@ -19,6 +19,7 @@ type SvcCtl struct {
 func NewSvcCtl() *SvcCtl {
 	return &SvcCtl{}
 }
+
 func (this *SvcCtl) ListAll(c *gin.Context) goft.Json {
 	ns := c.DefaultQuery("ns", "default")
 	return gin.H{
@@ -26,9 +27,11 @@ func (this *SvcCtl) ListAll(c *gin.Context) goft.Json {
 		"data": this.SvcMap.ListAll(ns),
 	}
 }
+
 func (this *SvcCtl) Build(goft *goft.Goft) {
 	goft.Handle("GET", "/svc", this.ListAll)
 }
+
 func (*SvcCtl) Name() string {
 	return "SvcCtl"
 }
