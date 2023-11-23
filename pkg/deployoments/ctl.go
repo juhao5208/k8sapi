@@ -38,6 +38,7 @@ func (this *DeploymentCtlV2) initLabel(deploy *v1.Deployment) {
 	deploy.Spec.Selector.MatchLabels["jtapp"] = deploy.Name
 	deploy.Spec.Template.ObjectMeta.Labels["jtapp"] = deploy.Name
 }
+
 func (this *DeploymentCtlV2) SaveDeployment(c *gin.Context) goft.Json {
 	dep := &v1.Deployment{}
 	goft.Error(c.ShouldBindJSON(dep))
@@ -70,6 +71,7 @@ func (this *DeploymentCtlV2) RmDeployment(c *gin.Context) goft.Json {
 		"data": "success",
 	}
 }
+
 func (this *DeploymentCtlV2) LoadDeploy(c *gin.Context) goft.Json {
 	ns := c.Param("ns")
 	name := c.Param("name")

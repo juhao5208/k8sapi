@@ -32,6 +32,7 @@ func cross() gin.HandlerFunc {
 		}
 	}
 }
+
 func main() {
 	server := goft.Ignite(cross()).Config(
 		configs.NewK8sHandler(),    //1
@@ -59,10 +60,5 @@ func main() {
 		Attach(
 		//middlewares.NewCrosMiddleware(),//跨域中间件
 		)
-	//server.GET("/admin/*filepath", func(c *gin.Context) {
-	//  http.FileServer(FS(false)).ServeHTTP(c.Writer,c.Request)
-	//})
-
 	server.Launch()
-
 }

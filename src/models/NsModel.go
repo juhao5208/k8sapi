@@ -6,9 +6,6 @@ package models
  * @version 1.15.3
  */
 
-
 type NsModel struct {
 	Name string
 }
-
-

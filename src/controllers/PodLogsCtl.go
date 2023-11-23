@@ -24,6 +24,7 @@ type PodLogsCtl struct {
 func NewPodLogsCtl() *PodLogsCtl {
 	return &PodLogsCtl{}
 }
+
 func (this *PodLogsCtl) GetLogs(c *gin.Context) (v goft.Void) {
 	ns := c.DefaultQuery("ns", "default")
 	podname := c.DefaultQuery("podname", "")
@@ -48,10 +49,9 @@ func (this *PodLogsCtl) GetLogs(c *gin.Context) (v goft.Void) {
 		}
 		c.Writer.(http.Flusher).Flush()
 	}
-
 	return
-
 }
+
 func (*PodLogsCtl) Name() string {
 	return "PodLogsCtl"
 }

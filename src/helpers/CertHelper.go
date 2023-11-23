@@ -151,7 +151,6 @@ func ParseCert(crt []byte) *models.CertModel {
 
 	//解析证书
 	x509Cert, err := x509.ParseCertificate(certBlock.Bytes)
-
 	if err != nil {
 		return nil
 	} else {

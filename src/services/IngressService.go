@@ -23,6 +23,7 @@ const (
 	OPTION_LIMIT
 	OPTION_REWRITE
 )
+
 const (
 	OPTOINS_CROS_TAG    = "nginx.ingress.kubernetes.io/enable-cors"
 	OPTIONS_REWRITE_TAG = "nginx.ingress.kubernetes.io/rewrite-enable"

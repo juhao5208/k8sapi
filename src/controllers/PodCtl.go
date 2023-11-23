@@ -23,7 +23,6 @@ func (this *PodCtl) Containers(c *gin.Context) goft.Json {
 		"code": 20000,
 		"data": this.PodService.GetPodContainer(ns, podname),
 	}
-
 }
 
 func (this *PodCtl) GetAll(c *gin.Context) goft.Json {
@@ -35,12 +34,13 @@ func (this *PodCtl) GetAll(c *gin.Context) goft.Json {
 		"data": this.PodService.PagePods(ns, this.Helper.StrToInt(page, 1),
 			this.Helper.StrToInt(size, 5)),
 	}
-
 }
+
 func (this *PodCtl) Build(goft *goft.Goft) {
 	goft.Handle("GET", "/pods", this.GetAll)
 	goft.Handle("GET", "/pods/containers", this.Containers)
 }
+
 func (*PodCtl) Name() string {
 	return "PodCtl"
 }

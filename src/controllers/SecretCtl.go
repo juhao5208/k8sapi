@@ -26,6 +26,7 @@ type SecretCtl struct {
 func NewSecretCtl() *SecretCtl {
 	return &SecretCtl{}
 }
+
 func (*SecretCtl) Name() string {
 	return "SecretCtl"
 }

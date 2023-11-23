@@ -42,6 +42,7 @@ func (this *ClientMapStruct) SendAll(v interface{}) {
 		return true
 	})
 }
+
 func (this *ClientMapStruct) Remove(conn *websocket.Conn) {
 	this.data.Delete(conn.RemoteAddr().String())
 }

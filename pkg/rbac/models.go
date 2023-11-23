@@ -13,6 +13,7 @@ type RoleModel struct {
 	NameSpace  string
 	CreateTime string
 }
+
 type RoleBindingModel struct {
 	Name       string
 	NameSpace  string

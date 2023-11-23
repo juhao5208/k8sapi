@@ -26,6 +26,7 @@ type ConfigMapCtl struct {
 func NewConfigMapCtl() *ConfigMapCtl {
 	return &ConfigMapCtl{}
 }
+
 func (*ConfigMapCtl) Name() string {
 	return "ConfigMapCtl"
 }

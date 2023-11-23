@@ -16,6 +16,7 @@ type DeploymentService struct {
 func NewDeploymentService() *DeploymentService {
 	return &DeploymentService{}
 }
+
 func (*DeploymentService) getDeploymentCondition(dep *v1.Deployment) string {
 	for _, item := range dep.Status.Conditions {
 		if string(item.Type) == "Available" && string(item.Status) != "True" {
@@ -24,9 +25,11 @@ func (*DeploymentService) getDeploymentCondition(dep *v1.Deployment) string {
 	}
 	return ""
 }
+
 func (*DeploymentService) getDeploymentIsComplete(dep *v1.Deployment) bool {
 	return dep.Status.Replicas == dep.Status.AvailableReplicas
 }
+
 func (this *DeploymentService) ListAll(namespace string) (ret []*models.Deployment) {
 	depList, err := this.DepMap.ListByNS(namespace)
 	goft.Error(err)
